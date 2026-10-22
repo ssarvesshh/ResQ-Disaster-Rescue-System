@@ -1,0 +1,1369 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResQ | Disaster Rescue Command Center</title>
+
+<style>
+:root {
+  --navy:#14243a;
+  --navy2:#20354f;
+  --red:#dc4545;
+  --redlight:#fff0ef;
+  --teal:#168779;
+  --amber:#c98922;
+  --bg:#f3f6fa;
+  --white:#ffffff;
+  --text:#1b2a40;
+  --muted:#78879b;
+  --line:#e3e9f0;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+
+header {
+  background:var(--navy);
+  color:white;
+  padding:18px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.brand { display:flex; align-items:center; gap:12px; }
+
+.logo {
+  background:var(--red);
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  font-size:24px;
+  font-weight:bold;
+}
+
+.brand h1 { margin:0; font-size:23px; }
+.brand small { color:#b8c6d8; letter-spacing:2px; font-size:9px; }
+
+.badge {
+  border:1px solid #52647b;
+  padding:9px 12px;
+  border-radius:25px;
+  font-size:11px;
+  color:#dbe6f2;
+}
+
+.layout {
+  display:grid;
+  grid-template-columns:205px 1fr;
+  min-height:calc(100vh - 79px);
+}
+
+aside {
+  background:var(--navy2);
+  color:#c3cfdd;
+  padding:25px 13px;
+}
+
+.side-heading {
+  color:#8295ad;
+  font-size:10px;
+  letter-spacing:2px;
+  margin:0 10px 15px;
+}
+
+.nav {
+  display:block;
+  width:100%;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#c3cfdd;
+  padding:13px 10px;
+  text-align:left;
+  margin:4px 0;
+  font-size:12px;
+}
+
+.nav:hover,.nav.active {
+  background:#344a65;
+  color:white;
+}
+
+.side-note {
+  margin-top:35px;
+  padding:13px;
+  border:1px solid #40546d;
+  border-radius:10px;
+  font-size:11px;
+  line-height:1.7;
+}
+
+main {
+  width:100%;
+  max-width:1500px;
+  padding:30px;
+  margin:auto;
+  min-width:0;
+}
+
+.heading {
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:flex-start;
+  margin-bottom:22px;
+}
+
+.eyebrow {
+  color:var(--red);
+  font-weight:bold;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+h2 { font-size:29px; margin:8px 0; }
+.subtitle { color:var(--muted); font-size:12px; line-height:1.7; }
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:13px;
+  margin-bottom:20px;
+}
+
+.stat,.panel {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:0 5px 20px #15263b08;
+}
+
+.stat {
+  padding:18px;
+  border-left:4px solid #a6b2c0;
+}
+
+.stat.red { border-left-color:var(--red); }
+.stat.teal { border-left-color:var(--teal); }
+.stat.amber { border-left-color:var(--amber); }
+
+.stat p {
+  color:var(--muted);
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1px;
+  margin:0 0 12px;
+}
+
+.stat strong { font-size:30px; }
+.stat small { display:block; color:var(--muted); margin-top:7px; font-size:10px; }
+
+.columns {
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(300px,0.85fr);
+  gap:17px;
+  align-items:start;
+}
+
+.panel { padding:19px; margin-bottom:17px; min-width:0; }
+
+.panel h3 { margin:0; font-size:15px; }
+.panel-description { font-size:11px; color:var(--muted); line-height:1.6; }
+
+.fields {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.field { display:flex; flex-direction:column; gap:6px; }
+.field.full { grid-column:1/-1; }
+
+label { font-size:11px; font-weight:bold; color:#56667c; }
+
+input,select {
+  width:100%;
+  border:1px solid #dce4ed;
+  border-radius:7px;
+  padding:11px;
+  background:#fbfcfe;
+  color:var(--text);
+  font-size:12px;
+}
+
+input:focus,select:focus {
+  outline:2px solid #d8e5f7;
+  border-color:#7b9ecb;
+}
+
+.btn {
+  border:0;
+  border-radius:7px;
+  padding:10px 13px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.primary { background:var(--red); color:white; }
+.dark { background:var(--navy); color:white; }
+.green { background:var(--teal); color:white; }
+.light { background:#edf1f6; color:#43536a; }
+
+.form-buttons {
+  grid-column:1/-1;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.toolbar { display:flex; gap:8px; margin:15px 0; }
+.toolbar input { flex:1; min-width:0; }
+.toolbar select { width:auto; max-width:145px; }
+
+.incident-list,.team-list,.heap-list,.activity-list {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.incident {
+  padding:13px;
+  border:1px solid var(--line);
+  border-left:4px solid #a5b1c0;
+  border-radius:9px;
+}
+
+.incident.Critical { border-left-color:var(--red); }
+.incident.High { border-left-color:var(--amber); }
+.incident.Medium { border-left-color:#467ec7; }
+.incident.Low { border-left-color:var(--teal); }
+
+.incident-top,.incident-bottom {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.incident-title { font-size:12px; font-weight:bold; }
+.location { color:var(--muted); font-size:10px; margin-top:6px; }
+
+.severity {
+  padding:5px 7px;
+  border-radius:5px;
+  font-size:9px;
+  font-weight:bold;
+  background:#edf1f6;
+}
+
+.severity.Critical { color:var(--red); background:var(--redlight); }
+.severity.High { color:var(--amber); background:#fff5e3; }
+.severity.Medium { color:#356fbd; background:#edf4ff; }
+.severity.Low { color:var(--teal); background:#e9f7f4; }
+
+.meta {
+  font-size:10px;
+  color:var(--muted);
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:12px 0;
+}
+
+.actions { display:flex; gap:5px; flex-wrap:wrap; }
+.small { padding:7px 9px; font-size:10px; }
+
+.empty {
+  border:1px dashed #d4dde7;
+  border-radius:8px;
+  padding:20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.ds-item,.team {
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:11px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ds-number {
+  background:#edf1f6;
+  border-radius:7px;
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.ds-info { flex:1; min-width:0; }
+.ds-info strong { display:block; font-size:11px; }
+.ds-info small { display:block; font-size:10px; color:var(--muted); margin-top:5px; }
+
+.score { font-size:13px; color:var(--red); font-weight:bold; }
+
+.team-status {
+  font-size:9px;
+  font-weight:bold;
+  color:var(--teal);
+  background:#e9f7f4;
+  padding:6px;
+  border-radius:5px;
+}
+
+.team-status.busy { color:var(--amber); background:#fff5e3; }
+
+.ds-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.ds-card {
+  background:#f7f9fc;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:12px;
+}
+
+.ds-card strong { display:block; font-size:12px; }
+.ds-card small { display:block; font-size:10px; color:var(--muted); margin-top:6px; line-height:1.5; }
+
+.map {
+  height:210px;
+  position:relative;
+  overflow:hidden;
+  border-radius:8px;
+  background-color:#e9eee7;
+  background-image:
+    linear-gradient(35deg,transparent 47%,#d0dacf 48%,#d0dacf 50%,transparent 51%),
+    linear-gradient(120deg,transparent 47%,#d0dacf 48%,#d0dacf 50%,transparent 51%),
+    linear-gradient(0deg,transparent 48%,white 49%,white 51%,transparent 52%);
+  background-size:125px 110px,170px 140px,100% 58px;
+}
+
+.map-label {
+  position:absolute;
+  font-size:9px;
+  color:#728576;
+  font-weight:bold;
+}
+
+.pin {
+  position:absolute;
+  border:2px solid white;
+  width:27px;
+  height:27px;
+  border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);
+  display:grid;
+  place-items:center;
+  background:var(--red);
+  color:white;
+  font-size:9px;
+  font-weight:bold;
+  box-shadow:0 3px 9px #0002;
+}
+
+.pin span { transform:rotate(45deg); }
+.pin.High { background:var(--amber); }
+.pin.Medium { background:#467ec7; }
+.pin.Low { background:var(--teal); }
+
+.map-note { color:var(--muted); font-size:10px; margin-top:10px; }
+
+.activity {
+  font-size:10px;
+  color:#647286;
+  border-bottom:1px solid #edf0f5;
+  padding:8px 0;
+  line-height:1.5;
+}
+
+.activity time {
+  display:block;
+  color:#9aa4b1;
+  font-size:9px;
+  margin-top:4px;
+}
+
+.section { scroll-margin-top:15px; }
+
+footer {
+  color:#8793a3;
+  text-align:center;
+  font-size:10px;
+  padding:20px 0 0;
+}
+
+.toast {
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:var(--navy);
+  color:white;
+  padding:13px 17px;
+  border-radius:8px;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+}
+
+.toast.show { opacity:1; }
+
+@media(max-width:1050px) {
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .columns { grid-template-columns:1fr; }
+}
+
+@media(max-width:700px) {
+  .layout { display:block; }
+  aside { display:flex; overflow-x:auto; padding:8px; gap:5px; }
+  .side-heading,.side-note { display:none; }
+  .nav { white-space:nowrap; width:auto; margin:0; }
+  main { padding:17px; }
+  .heading { display:block; }
+  .badge { display:inline-block; margin-top:10px; }
+  .stats { gap:8px; }
+  .stat { padding:13px; }
+  .stat strong { font-size:24px; }
+  .fields { grid-template-columns:1fr; }
+  .field.full,.form-buttons { grid-column:auto; }
+  .toolbar { flex-direction:column; }
+  .toolbar select { width:100%; max-width:none; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">+</div>
+    <div>
+      <h1>ResQ</h1>
+      <small>DISASTER RESPONSE SYSTEM</small>
+    </div>
+  </div>
+  <div class="badge">● SIMULATION MODE</div>
+</header>
+
+<div class="layout">
+<aside>
+  <p class="side-heading">COMMAND MENU</p>
+  <button class="nav active" onclick="goTo('overview',this)">▦ &nbsp; Overview</button>
+  <button class="nav" onclick="goTo('register',this)">＋ &nbsp; Register Incident</button>
+  <button class="nav" onclick="goTo('incidents',this)">⚑ &nbsp; Incidents</button>
+  <button class="nav" onclick="goTo('teams',this)">♧ &nbsp; Rescue Teams</button>
+  <button class="nav" onclick="goTo('dsworkbench',this)">⌘ &nbsp; DS Workbench</button>
+  <button class="nav" onclick="goTo('activity',this)">◷ &nbsp; Activity Log</button>
+
+  <div class="side-note">
+    <strong>RESQ PROTOCOL</strong>
+    Register emergencies, prioritize cases, and coordinate rescue teams through a simulated command centre.
+  </div>
+</aside>
+
+<main>
+<section id="overview" class="section">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">EMERGENCY OPERATIONS / OVERVIEW</div>
+      <h2>Command Center</h2>
+      <div class="subtitle">Monitor incidents, coordinate rescue teams and prioritize emergency response.</div>
+    </div>
+    <div class="badge" style="background:#fff;color:#53647a;border-color:#e0e6ee">Local simulation</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat red">
+      <p>ACTIVE INCIDENTS</p><strong id="activeCount">0</strong>
+      <small>Cases requiring attention</small>
+    </div>
+    <div class="stat amber">
+      <p>CRITICAL CASES</p><strong id="criticalCount">0</strong>
+      <small>Highest severity level</small>
+    </div>
+    <div class="stat teal">
+      <p>AVAILABLE TEAMS</p><strong id="availableCount">0</strong>
+      <small>Ready for assignment</small>
+    </div>
+    <div class="stat">
+      <p>PENDING CASES</p><strong id="pendingCount">0</strong>
+      <small>Awaiting a rescue team</small>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div>
+      <div class="panel">
+        <h3>Incident Overview</h3>
+        <p class="panel-description">Active incidents plotted using illustrative positions. These are not live GPS locations.</p>
+        <div class="map" id="map">
+          <span class="map-label" style="left:8%;top:10%">NORTH ZONE</span>
+          <span class="map-label" style="left:60%;top:12%">EAST ZONE</span>
+          <span class="map-label" style="left:32%;top:78%">SOUTH ZONE</span>
+        </div>
+        <p class="map-note">Red: Critical · Amber: High · Blue: Medium · Teal: Low</p>
+      </div>
+
+      <div class="panel">
+        <h3>Incident Register</h3>
+        <p class="panel-description">Search and manage incidents by their current status.</p>
+        <div class="toolbar">
+          <input id="search" placeholder="Search incident or location..." oninput="render()">
+          <select id="statusFilter" onchange="render()">
+            <option>All</option>
+            <option>Pending</option>
+            <option>Assigned</option>
+            <option>In Progress</option>
+            <option>Resolved</option>
+          </select>
+        </div>
+        <div class="incident-list" id="incidentList"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Emergency Priority Queue</h3>
+        <p class="panel-description">Binary Max-Heap: the highest-priority emergency is at the root.</p>
+        <div class="heap-list" id="heapList"></div>
+      </div>
+
+      <div class="panel" id="teams">
+        <h3>Rescue Team Management</h3>
+        <p class="panel-description">Register teams and allocate them using a Circular FIFO Queue.</p>
+        <form id="teamForm" class="fields">
+          <div class="field">
+            <label for="teamName">Team name</label>
+            <input id="teamName" placeholder="Rapid Response D" required>
+          </div>
+          <div class="field">
+            <label for="teamBase">Base location</label>
+            <input id="teamBase" placeholder="Thrissur" required>
+          </div>
+          <div class="form-buttons">
+            <button class="btn dark" type="submit">+ Add Team</button>
+          </div>
+        </form>
+        <div class="team-list" id="teamList" style="margin-top:15px"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Data Structure Monitor</h3>
+        <div class="ds-grid">
+          <div class="ds-card">
+            <strong>Max-Heap</strong>
+            <small id="heapCount">0 active cases</small>
+          </div>
+          <div class="ds-card">
+            <strong>Circular Queue</strong>
+            <small id="queueCount">0 teams waiting</small>
+          </div>
+          <div class="ds-card">
+            <strong>Hash Map</strong>
+            <small id="mapCount">0 indexed records</small>
+          </div>
+          <div class="ds-card">
+            <strong>Undo Stack</strong>
+            <small id="stackCount">0 saved states</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="register" class="section">
+  <div class="panel">
+    <div class="eyebrow">NEW EMERGENCY</div>
+    <h2 style="font-size:24px">Register an Incident</h2>
+    <p class="panel-description">Enter the emergency details to add a case to the priority system.</p>
+
+    <form id="incidentForm" class="fields">
+      <div class="field">
+        <label for="type">Incident type</label>
+        <select id="type">
+          <option>Flood</option>
+          <option>Landslide</option>
+          <option>Fire</option>
+          <option>Medical emergency</option>
+          <option>Building collapse</option>
+          <option>Road accident</option>
+          <option>Missing persons</option>
+          <option>Other emergency</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="severity">Severity</label>
+        <select id="severity">
+          <option>Critical</option>
+          <option selected>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label for="location">Incident location</label>
+        <input id="location" placeholder="Example: Chalakudy, Thrissur" required>
+      </div>
+
+      <div class="field">
+        <label for="people">People affected</label>
+        <input id="people" type="number" min="1" value="5" required>
+      </div>
+
+      <div class="field">
+        <label for="medical">Medical urgency</label>
+        <select id="medical">
+          <option value="1">Stable</option>
+          <option value="2" selected>Needs attention</option>
+          <option value="3">Urgent medical help</option>
+        </select>
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn primary" type="submit">Register Incident</button>
+        <button class="btn light" type="reset">Clear Form</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="incidents" class="section">
+  <div class="panel">
+    <h3>Incident Management</h3>
+    <p class="panel-description">Use the Overview page to search, assign, progress or resolve cases.</p>
+    <button class="btn dark" onclick="goTo('overview',document.querySelector('.nav'))">Return to Overview</button>
+  </div>
+</section>
+
+<section id="dsworkbench" class="section">
+  <div class="panel">
+    <div class="eyebrow">DATA STRUCTURES IN ACTION</div>
+    <h2 style="font-size:24px">DS Workbench</h2>
+    <p class="panel-description">The ResQ prototype demonstrates these concepts through incident and team operations.</p>
+    <div class="ds-grid">
+      <div class="ds-card"><strong>1. Binary Max-Heap</strong><small>Prioritizes emergency records by score. The root contains the highest-priority incident.</small></div>
+      <div class="ds-card"><strong>2. Circular Queue</strong><small>Stores available rescue team IDs and assigns teams in FIFO order.</small></div>
+      <div class="ds-card"><strong>3. Hash Map</strong><small>Maps incident IDs to incident objects for direct record lookup.</small></div>
+      <div class="ds-card"><strong>4. Stack</strong><small>Stores previous application states. Undo restores the most recent saved state first.</small></div>
+      <div class="ds-card"><strong>5. Arrays</strong><small>Store incident records, rescue teams and activity history.</small></div>
+      <div class="ds-card"><strong>6. Searching & Sorting</strong><small>Finds incidents by keyword and sorts cases by priority score.</small></div>
+    </div>
+    <p class="panel-description" style="margin-top:18px"><b>Workflow:</b> Register incident → Calculate priority → Add to heap → Assign team from queue → Update status → Record activity.</p>
+    <button class="btn light" onclick="undoLast()" id="undoButton">↶ Undo Last Action</button>
+    <button class="btn light" onclick="exportData()">Export JSON</button>
+    <button class="btn light" onclick="loadDemo()">Load Demo Data</button>
+    <button class="btn light" onclick="resetData()">Reset Data</button>
+  </div>
+</section>
+
+<section id="activity" class="section">
+  <div class="panel">
+    <h3>Activity Log</h3>
+    <p class="panel-description">A record of recent actions in this simulation.</p>
+    <div class="activity-list" id="activityList"></div>
+  </div>
+</section>
+
+<footer>
+  ResQ Disaster Rescue Coordination System · Academic Data Structures Project · Simulation only
+</footer>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let incidents = [];
+let teams = [];
+let logs = [];
+let undoStack = [];
+
+let nextIncident = 1;
+let nextTeam = 1;
+let incidentIndex = new Map();
+
+/* CIRCULAR QUEUE IMPLEMENTATION */
+class CircularQueue {
+  constructor(capacity=100) {
+    this.data = new Array(capacity);
+    this.front = 0;
+    this.rear = 0;
+    this.size = 0;
+    this.capacity = capacity;
+  }
+
+  enqueue(value) {
+    if (this.size === this.capacity) return false;
+    this.data[this.rear] = value;
+    this.rear = (this.rear + 1) % this.capacity;
+    this.size++;
+    return true;
+  }
+
+  dequeue() {
+    if (this.size === 0) return null;
+    const value = this.data[this.front];
+    this.front = (this.front + 1) % this.capacity;
+    this.size--;
+    return value;
+  }
+
+  clear() {
+    this.data = new Array(this.capacity);
+    this.front = 0;
+    this.rear = 0;
+    this.size = 0;
+  }
+}
+
+let teamQueue = new CircularQueue();
+
+/* PRIORITY SCORE */
+function scoreIncident(i) {
+  const severity = {
+    Critical: 100,
+    High: 70,
+    Medium: 40,
+    Low: 15
+  };
+
+  return (severity[i.severity] || 0)
+    + Math.min(i.people,100) * 0.5
+    + i.medical * 10;
+}
+
+/* BINARY MAX-HEAP IMPLEMENTATION */
+class MaxHeap {
+  constructor() {
+    this.items = [];
+  }
+
+  insert(item) {
+    this.items.push(item);
+    let child = this.items.length - 1;
+
+    while (child > 0) {
+      const parent = Math.floor((child - 1) / 2);
+
+      if (scoreIncident(this.items[parent]) >= scoreIncident(this.items[child])) {
+        break;
+      }
+
+      [this.items[parent],this.items[child]] =
+        [this.items[child],this.items[parent]];
+
+      child = parent;
+    }
+  }
+
+  peek() {
+    return this.items[0] || null;
+  }
+
+  pop() {
+    if (!this.items.length) return null;
+
+    const maximum = this.items[0];
+    const last = this.items.pop();
+
+    if (this.items.length) {
+      this.items[0] = last;
+      let parent = 0;
+
+      while (true) {
+        let largest = parent;
+        const left = 2 * parent + 1;
+        const right = 2 * parent + 2;
+
+        if (left < this.items.length &&
+            scoreIncident(this.items[left]) > scoreIncident(this.items[largest])) {
+          largest = left;
+        }
+
+        if (right < this.items.length &&
+            scoreIncident(this.items[right]) > scoreIncident(this.items[largest])) {
+          largest = right;
+        }
+
+        if (largest === parent) break;
+
+        [this.items[parent],this.items[largest]] =
+          [this.items[largest],this.items[parent]];
+
+        parent = largest;
+      }
+    }
+
+    return maximum;
+  }
+}
+
+/* HASH MAP: INCIDENT ID -> INCIDENT RECORD */
+function rebuildIndex() {
+  incidentIndex = new Map();
+  incidents.forEach(i => incidentIndex.set(i.id,i));
+}
+
+function getIncident(id) {
+  return incidentIndex.get(Number(id));
+}
+
+/* SAVE AND RESTORE STATES USING A STACK */
+function saveUndo() {
+  undoStack.push(JSON.stringify({
+    incidents,teams,logs,nextIncident,nextTeam
+  }));
+
+  if (undoStack.length > 30) undoStack.shift();
+}
+
+function undoLast() {
+  if (!undoStack.length) {
+    notify("There is no action to undo.");
+    return;
+  }
+
+  const state = JSON.parse(undoStack.pop());
+
+  incidents = state.incidents;
+  teams = state.teams;
+  logs = state.logs;
+  nextIncident = state.nextIncident;
+  nextTeam = state.nextTeam;
+
+  rebuildIndex();
+  rebuildTeamQueue();
+  render();
+  notify("Previous state restored.");
+}
+
+/* TEAM QUEUE HELPERS */
+function rebuildTeamQueue() {
+  teamQueue.clear();
+
+  teams
+    .filter(t => t.status === "Available")
+    .forEach(t => teamQueue.enqueue(t.id));
+}
+
+function enqueueTeam(id) {
+  const t = teams.find(t => t.id === id);
+
+  if (t && t.status === "Available") {
+    teamQueue.enqueue(id);
+  }
+}
+
+function log(message) {
+  logs.unshift({
+    message,
+    time:new Date().toLocaleTimeString()
+  });
+
+  logs = logs.slice(0,60);
+}
+
+function addIncident(data) {
+  const incident = {
+    id:nextIncident++,
+    ...data,
+    status:"Pending",
+    teamId:null,
+    created:new Date().toLocaleString()
+  };
+
+  incidents.push(incident);
+  incidentIndex.set(incident.id,incident);
+  log("Incident #" + incident.id + " registered: " + incident.type);
+
+  return incident;
+}
+
+function addTeam(name,base) {
+  const team = {
+    id:nextTeam++,
+    name,
+    base,
+    status:"Available",
+    incidentId:null
+  };
+
+  teams.push(team);
+  enqueueTeam(team.id);
+  log("Rescue team added: " + team.name);
+}
+
+function assignTeam(id) {
+  const incident = getIncident(id);
+
+  if (!incident || incident.status !== "Pending") return;
+
+  saveUndo();
+
+  let team = null;
+
+  while (teamQueue.size > 0) {
+    const teamId = teamQueue.dequeue();
+    const candidate = teams.find(t => t.id === teamId);
+
+    if (candidate && candidate.status === "Available") {
+      team = candidate;
+      break;
+    }
+  }
+
+  if (!team) {
+    rebuildTeamQueue();
+    undoStack.pop();
+    notify("No available rescue teams.");
+    return;
+  }
+
+  incident.status = "Assigned";
+  incident.teamId = team.id;
+  team.status = "Busy";
+  team.incidentId = incident.id;
+
+  log(team.name + " assigned to incident #" + incident.id);
+  render();
+  notify("Rescue team assigned.");
+}
+
+function startResponse(id) {
+  const incident = getIncident(id);
+  if (!incident) return;
+
+  saveUndo();
+  incident.status = "In Progress";
+  log("Response started for incident #" + id);
+  render();
+  notify("Response started.");
+}
+
+function resolveIncident(id) {
+  const incident = getIncident(id);
+  if (!incident) return;
+
+  saveUndo();
+  incident.status = "Resolved";
+
+  const team = teams.find(t => t.id === incident.teamId);
+
+  if (team) {
+    team.status = "Available";
+    team.incidentId = null;
+    enqueueTeam(team.id);
+  }
+
+  log("Incident #" + id + " resolved");
+  render();
+  notify("Incident resolved. Team released.");
+}
+
+function removeIncident(id) {
+  const incident = getIncident(id);
+  if (!incident) return;
+
+  saveUndo();
+
+  if (incident.teamId) {
+    const team = teams.find(t => t.id === incident.teamId);
+
+    if (team && team.status === "Busy") {
+      team.status = "Available";
+      team.incidentId = null;
+      enqueueTeam(team.id);
+    }
+  }
+
+  incidents = incidents.filter(i => i.id !== id);
+  rebuildIndex();
+
+  log("Incident #" + id + " removed");
+  render();
+  notify("Incident removed.");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function render() {
+  rebuildIndex();
+
+  const active = incidents.filter(i => i.status !== "Resolved");
+  const pending = incidents.filter(i => i.status === "Pending");
+
+  $("activeCount").textContent = active.length;
+  $("criticalCount").textContent =
+    active.filter(i => i.severity === "Critical").length;
+
+  $("availableCount").textContent =
+    teams.filter(t => t.status === "Available").length;
+
+  $("pendingCount").textContent = pending.length;
+
+  $("heapCount").textContent = active.length + " active cases";
+  $("queueCount").textContent = teamQueue.size + " teams waiting";
+  $("mapCount").textContent = incidentIndex.size + " indexed records";
+  $("stackCount").textContent = undoStack.length + " saved states";
+
+  renderIncidents();
+  renderHeap();
+  renderTeams();
+  renderActivity();
+  renderMap();
+
+  localStorage.setItem("resqIncidents",JSON.stringify(incidents));
+  localStorage.setItem("resqTeams",JSON.stringify(teams));
+  localStorage.setItem("resqLogs",JSON.stringify(logs));
+  localStorage.setItem("resqNextIncident",nextIncident);
+  localStorage.setItem("resqNextTeam",nextTeam);
+}
+
+function renderIncidents() {
+  const query = $("search").value.toLowerCase();
+  const filter = $("statusFilter").value;
+
+  const list = [...incidents]
+    .sort((a,b) => scoreIncident(b)-scoreIncident(a))
+    .filter(i =>
+      (filter === "All" || i.status === filter) &&
+      (i.type + " " + i.location + " #" + i.id).toLowerCase().includes(query)
+    );
+
+  $("incidentList").innerHTML = list.length ? list.map(i => `
+    <article class="incident ${i.severity}">
+      <div class="incident-top">
+        <div>
+          <div class="incident-title">#${i.id} · ${escapeHTML(i.type)}</div>
+          <div class="location">⌖ ${escapeHTML(i.location)}</div>
+        </div>
+        <span class="severity ${i.severity}">${i.severity.toUpperCase()}</span>
+      </div>
+
+      <div class="meta">
+        <span>${i.people} people affected</span>
+        <span>Priority: <b>${scoreIncident(i).toFixed(1)}</b></span>
+        <span>${i.status}</span>
+      </div>
+
+      <div class="incident-bottom">
+        <span class="location">
+          ${i.teamId ? "Team: " + escapeHTML((teams.find(t=>t.id===i.teamId)||{}).name || "Assigned") : "No team assigned"}
+        </span>
+
+        <div class="actions">
+          ${i.status==="Pending" ? `<button class="btn dark small" onclick="assignTeam(${i.id})">Assign Team</button>` : ""}
+          ${i.status==="Assigned" ? `<button class="btn primary small" onclick="startResponse(${i.id})">Start</button>` : ""}
+          ${i.status==="In Progress" ? `<button class="btn green small" onclick="resolveIncident(${i.id})">Resolve</button>` : ""}
+          <button class="btn light small" onclick="removeIncident(${i.id})">Remove</button>
+        </div>
+      </div>
+    </article>
+  `).join("") : `<div class="empty">No matching incidents found.</div>`;
+}
+
+function renderHeap() {
+  const heap = new MaxHeap();
+
+  incidents
+    .filter(i => i.status !== "Resolved")
+    .forEach(i => heap.insert(i));
+
+  $("heapList").innerHTML = heap.items.length ? heap.items.map((i,index) => `
+    <div class="ds-item">
+      <span class="ds-number">${index+1}</span>
+      <div class="ds-info">
+        <strong>#${i.id} · ${escapeHTML(i.type)}</strong>
+        <small>${escapeHTML(i.location)} · ${i.severity}</small>
+      </div>
+      <span class="score">${scoreIncident(i).toFixed(0)}</span>
+    </div>
+  `).join("") : `<div class="empty">No active emergencies.</div>`;
+}
+
+function renderTeams() {
+  $("teamList").innerHTML = teams.length ? teams.map(t => `
+    <div class="team">
+      <div class="ds-number">♧</div>
+      <div class="ds-info">
+        <strong>${escapeHTML(t.name)}</strong>
+        <small>${escapeHTML(t.base)}${t.incidentId ? " · Incident #"+t.incidentId : ""}</small>
+      </div>
+      <span class="team-status ${t.status==="Busy"?"busy":""}">${t.status}</span>
+    </div>
+  `).join("") : `<div class="empty">No rescue teams registered.</div>`;
+}
+
+function renderActivity() {
+  $("activityList").innerHTML = logs.length ? logs.slice(0,12).map(l => `
+    <div class="activity">
+      ↗ &nbsp; ${escapeHTML(l.message)}
+      <time>${escapeHTML(l.time)}</time>
+    </div>
+  `).join("") : `<div class="empty">No activity yet.</div>`;
+}
+
+function renderMap() {
+  const map = $("map");
+  map.querySelectorAll(".pin").forEach(pin => pin.remove());
+
+  const positions = [
+    [16,29],[37,20],[65,27],[79,49],[48,60],[22,69],
+    [69,77],[39,42],[85,22],[10,52],[56,14],[58,48]
+  ];
+
+  incidents
+    .filter(i => i.status !== "Resolved")
+    .slice(0,12)
+    .forEach((i,index) => {
+      const pin = document.createElement("div");
+      pin.className = "pin " + i.severity;
+      pin.style.left = positions[index][0] + "%";
+      pin.style.top = positions[index][1] + "%";
+      pin.title = i.type + " — " + i.location;
+      pin.innerHTML = "<span>" + i.id + "</span>";
+      map.appendChild(pin);
+    });
+}
+
+$("incidentForm").addEventListener("submit",event => {
+  event.preventDefault();
+
+  const location = $("location").value.trim();
+  const people = Number($("people").value);
+
+  if (!location || !Number.isInteger(people) || people < 1) {
+    notify("Please enter valid incident details.");
+    return;
+  }
+
+  saveUndo();
+
+  addIncident({
+    type:$("type").value,
+    severity:$("severity").value,
+    location,
+    people,
+    medical:Number($("medical").value)
+  });
+
+  event.target.reset();
+  $("people").value = 5;
+  $("severity").value = "High";
+  $("medical").value = "2";
+
+  render();
+  goTo("overview",document.querySelector(".nav"));
+  notify("Incident registered successfully.");
+});
+
+$("teamForm").addEventListener("submit",event => {
+  event.preventDefault();
+
+  const name = $("teamName").value.trim();
+  const base = $("teamBase").value.trim();
+
+  if (!name || !base) return;
+
+  if (teams.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+    notify("A team with that name already exists.");
+    return;
+  }
+
+  saveUndo();
+  addTeam(name,base);
+
+  event.target.reset();
+  render();
+  notify("Rescue team added.");
+});
+
+function loadDemo() {
+  saveUndo();
+
+  addTeam("Rapid Response A","Thrissur");
+  addTeam("Medical Support B","Irinjalakuda");
+  addTeam("Flood Rescue C","Chalakudy");
+
+  addIncident({
+    type:"Flood",
+    severity:"Critical",
+    location:"Chalakudy, Thrissur",
+    people:42,
+    medical:3
+  });
+
+  addIncident({
+    type:"Landslide",
+    severity:"High",
+    location:"Athirappilly region",
+    people:18,
+    medical:2
+  });
+
+  addIncident({
+    type:"Medical emergency",
+    severity:"Medium",
+    location:"Thrissur city",
+    people:3,
+    medical:3
+  });
+
+  render();
+  notify("Demo data loaded.");
+}
+
+function resetData() {
+  if (!confirm("Reset all ResQ data in this browser?")) return;
+
+  saveUndo();
+
+  incidents = [];
+  teams = [];
+  logs = [];
+  nextIncident = 1;
+  nextTeam = 1;
+
+  rebuildIndex();
+  rebuildTeamQueue();
+  render();
+
+  notify("Data reset.");
+}
+
+function exportData() {
+  const data = {
+    project:"ResQ",
+    exportedAt:new Date().toISOString(),
+    incidents,
+    teams,
+    activityLog:logs
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {
+    type:"application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "resq-data.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+  notify("JSON export downloaded.");
+}
+
+function goTo(id,button) {
+  document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+  if (button) button.classList.add("active");
+
+  document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+  $(id).style.display = "block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function notify(message) {
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => toast.classList.remove("show"),2400);
+}
+
+function loadSavedData() {
+  try {
+    incidents = JSON.parse(localStorage.getItem("resqIncidents")) || [];
+    teams = JSON.parse(localStorage.getItem("resqTeams")) || [];
+    logs = JSON.parse(localStorage.getItem("resqLogs")) || [];
+
+    nextIncident = Number(localStorage.getItem("resqNextIncident")) || 1;
+    nextTeam = Number(localStorage.getItem("resqNextTeam")) || 1;
+  } catch(error) {
+    incidents = [];
+    teams = [];
+    logs = [];
+  }
+
+  rebuildIndex();
+  rebuildTeamQueue();
+
+  if (!teams.length && !incidents.length) {
+    addTeam("Rapid Response A","Thrissur");
+    addTeam("Medical Support B","Irinjalakuda");
+    addTeam("Flood Rescue C","Chalakudy");
+
+    addIncident({
+      type:"Flood",
+      severity:"Critical",
+      location:"Chalakudy, Thrissur",
+      people:42,
+      medical:3
+    });
+
+    addIncident({
+      type:"Landslide",
+      severity:"High",
+      location:"Athirappilly region",
+      people:18,
+      medical:2
+    });
+
+    addIncident({
+      type:"Medical emergency",
+      severity:"Medium",
+      location:"Thrissur city",
+      people:3,
+      medical:3
+    });
+  }
+
+  rebuildIndex();
+  rebuildTeamQueue();
+  render();
+}
+
+loadSavedData();
+</script>
+</body>
+</html>
